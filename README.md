@@ -1,4 +1,4 @@
-# NeuralNetworkLearnsSin
+# NeuralNetworkLearnsSinFunction
 
 It's not perfect, I need to read more about Neural Networks
 
