@@ -31,8 +31,6 @@ for i in range(5000):
     a3 = tanh(z3)
     z4 = a3.dot(w3) + b3
 
-    cost = np.sum((z4 - y)**2)/2
-
     # backpropagation
     z4_delta = z4 - y
     dw3 = a3.T.dot(z4_delta)
@@ -50,8 +48,8 @@ for i in range(5000):
     for param, gradient in zip([w1, w2, w3, b1, b2, b3], [dw1, dw2, dw3, db1, db2, db3]):
         param -= learning_rate * gradient
 
-plt.plot(x, z4, label='after')
-plt.plot(x, y, label='before')
+plt.plot(x, z4, label='learned')
+plt.plot(x, y, label='original')
 
 plt.legend(title='miftah:')
 plt.title('Sin NN')
