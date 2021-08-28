@@ -1,6 +1,6 @@
 # NeuralNetworkLearnsSinFunction
 
-I used this repository https://github.com/MorvanZhou/simple-neural-networks
+this repository helped me https://github.com/MorvanZhou/simple-neural-networks
 
 here's a demo:
 
