@@ -1,21 +1,59 @@
-from numpy import exp, array, random, dot, square, sin, pi, tanh
+import numpy as np
+import matplotlib.pyplot as plt
 
-random.seed(1)
+np.random.seed(1)
+x = np.linspace(-2 * np.pi, 2 * np.pi, 200)[:, None]
+y = np.sin(x)
+learning_rate = 0.001
 
-original_input = random.uniform(low = -2 * pi, high = 2 * pi, size = 1000)
-original_output = sin(original_input)
 
-weight = 2 * random.random() - 1
+def tanh(x):
+    return np.tanh(x)
 
-for i in range(20000):
-	output = tanh(dot(original_input, weight))
-	d_output = 1 - square(output)
-	error = original_output - output
-	weight += dot(original_input, error * d_output) * 0.002
+def derivative_tanh(x):
+    return 1 - tanh(x)**2
 
-print("45° ", tanh(pi/4 * weight), " ≈ ", 0.707)
-print("60° ", tanh(pi/3 * weight), " ≈ ", 0.866)
-print("90° ", tanh(pi/2 * weight), " ≈ ", 1.0)
-print("30° ", tanh(pi/6 * weight), " ≈ ", 0.5)
-print("20° ", tanh(pi/9 * weight), " ≈ ", 0.342)
-print("180° ", tanh(pi * weight), " ≈ ", 0.0) ### it's supposed to  be near zero
+
+w1 = np.random.uniform(0, 1, (1, 10))
+w2 = np.random.uniform(0, 1, (10, 10))
+w3 = np.random.uniform(0, 1, (10, 1))
+
+b1 = np.full((1, 10), 0.1)
+b2 = np.full((1, 10), 0.1)
+b3 = np.full((1, 1), 0.1)
+
+
+for i in range(5000):
+    a1 = x
+    z2 = a1.dot(w1) + b1
+    a2 = tanh(z2)
+    z3 = a2.dot(w2) + b2
+    a3 = tanh(z3)
+    z4 = a3.dot(w3) + b3
+
+    cost = np.sum((z4 - y)**2)/2
+
+    # backpropagation
+    z4_delta = z4 - y
+    dw3 = a3.T.dot(z4_delta)
+    db3 = np.sum(z4_delta, axis=0, keepdims=True)
+
+    z3_delta = z4_delta.dot(w3.T) * derivative_tanh(z3)
+    dw2 = a2.T.dot(z3_delta)
+    db2 = np.sum(z3_delta, axis=0, keepdims=True)
+
+    z2_delta = z3_delta.dot(w2.T) * derivative_tanh(z2)
+    dw1 = x.T.dot(z2_delta)
+    db1 = np.sum(z2_delta, axis=0, keepdims=True)
+
+    # update parameters
+    for param, gradient in zip([w1, w2, w3, b1, b2, b3], [dw1, dw2, dw3, db1, db2, db3]):
+        param -= learning_rate * gradient
+
+plt.plot(x, z4, label='after')
+plt.plot(x, y, label='before')
+
+plt.legend(title='miftah:')
+plt.title('Sin NN')
+
+plt.show()
